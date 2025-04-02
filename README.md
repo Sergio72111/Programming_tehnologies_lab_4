@@ -1,1 +1,1 @@
-# Programming_tehnologies_lab_4
+# Создание логики приложения
