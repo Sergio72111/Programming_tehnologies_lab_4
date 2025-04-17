@@ -1,8 +1,8 @@
-#include <iostream>     // Для вывода в консоль
-#include <fstream>      // Для работы с файлами (лог в файл)
-#include <string>       // Для работы со строками
-#include <memory>       // Для использования std::shared_ptr и std::unique_ptr
-#include <vector>       // Для хранения списка устройств
+#include <iostream>     
+#include <fstream>      
+#include <string>       
+#include <memory>       
+#include <vector>      
 
 // === Интерфейс логгера ===
 class ILogger {
