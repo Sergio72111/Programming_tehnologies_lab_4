@@ -245,5 +245,5 @@ int main() {
     ui.ShowDevices();
     ui.ShowTotalPower();
 
-    return 0; // Завершение программы
+    return 0; 
 }
