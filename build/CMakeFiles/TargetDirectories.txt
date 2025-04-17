@@ -1,0 +1,3 @@
+C:/Laba_4/Programming_tehnologies_lab_4/build/CMakeFiles/ElectricDevices.dir
+C:/Laba_4/Programming_tehnologies_lab_4/build/CMakeFiles/edit_cache.dir
+C:/Laba_4/Programming_tehnologies_lab_4/build/CMakeFiles/rebuild_cache.dir
