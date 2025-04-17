@@ -126,7 +126,7 @@ public:
     }
 };
 
-// === Фабрика устройств (Factory Method) ===
+// ===  (Factory Method) ===
 
 // Интерфейс 
 class DeviceFactory {
