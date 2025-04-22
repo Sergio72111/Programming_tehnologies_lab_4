@@ -1,225 +1,224 @@
-#include <iostream>     
-#include <fstream>      
-#include <string>       
-#include <memory>       
-#include <vector>      
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <memory>
+#include <vector>
 
 // === Интерфейс логгера ===
 class ILogger {
 public:
-    virtual void Log(const std::string& message) = 0; // Чисто виртуальный метод логирования, реализуется в наследниках
-    virtual ~ILogger() = default;                     // Виртуальный деструктор
+    virtual void Log(const std::string& message) = 0;
+    virtual ~ILogger() = default;
 };
 
 // --- Реализация логгера: Консоль ---
 class ConsoleLogger : public ILogger {
 public:
     void Log(const std::string& message) override {
-        std::cout << "[Console] " << message << "\n"; // Вывод сообщения в консоль с префиксом [Console]
+        std::cout << "[Console] " << message << "\n";
     }
 };
 
 // --- Реализация логгера: Файл ---
 class FileLogger : public ILogger {
 private:
-    std::ofstream _file; // Поток для записи в файл
+    std::ofstream _file;
 
 public:
     FileLogger(const std::string& filename) {
-        _file.open(filename, std::ios::app); // Открытие файла для дозаписи (append)
+        _file.open(filename, std::ios::app);
     }
 
     void Log(const std::string& message) override {
         if (_file.is_open()) {
-            _file << "[File] " << message << "\n"; // Запись сообщения в файл с префиксом [File]
+            _file << "[File] " << message << "\n";
         }
     }
 
     ~FileLogger() {
-        if (_file.is_open()) _file.close(); // Закрытие файла при уничтожении объекта
+        if (_file.is_open()) _file.close();
     }
 };
 
-// --- логгеры ---
+// --- Фабрика логгеров ---
 class LoggerFactory {
 public:
-    enum LoggerType { Console, File }; // Перечисление возможных типов логгера
+    enum LoggerType { Console, File };
 
     static std::shared_ptr<ILogger> CreateLogger(LoggerType type) {
-        if (type == Console) return std::make_shared<ConsoleLogger>();      // Возврат консольного логгера
-        if (type == File) return std::make_shared<FileLogger>("log.txt");  // Возврат файлового логгера
-        return nullptr; // В случае неизвестного типа возвращается nullptr
+        if (type == Console) return std::make_shared<ConsoleLogger>();
+        if (type == File) return std::make_shared<FileLogger>("log.txt");
+        return nullptr;
     }
 };
 
 // === Абстрактный класс электроприбора ===
 class AbstractElectricDevice {
 protected:
-    std::string _name;  // Название устройства
-    double _power;      // Потребляемая мощность
-    bool _isOn;         // Состояние (включено/выключено)
+    std::string _name;
+    int _power;
+    bool _isOn;
 
 public:
-    AbstractElectricDevice(const std::string& name, double power)
-        : _name(name), _power(power), _isOn(false) {} // Инициализация полей
+    AbstractElectricDevice(const std::string& name, int power)
+        : _name(name), _power(power), _isOn(false) {}
 
-    virtual void TurnOn() { _isOn = true; }           // Метод включения прибора
-    virtual void TurnOff() { _isOn = false; }         // Метод выключения прибора
-    virtual double GetPower() const { return _isOn ? _power : 0; } // Возвращает мощность, если включен
-    virtual std::string GetInfo() const = 0;          // Абстрактный метод для получения инфо об устройстве
-    virtual ~AbstractElectricDevice() = default;      // Виртуальный деструктор
+    virtual void TurnOn() { _isOn = true; }
+    virtual void TurnOff() { _isOn = false; }
+    virtual int GetPower() const { return _isOn ? _power : 0; }
+    virtual std::string GetInfo() const = 0;
+    virtual ~AbstractElectricDevice() = default;
 };
 
 // --- Бытовая техника ---
 class HomeAppliance : public AbstractElectricDevice {
 protected:
-    std::string _brand; // Бренд устройства
+    std::string _brand;
 
 public:
-    HomeAppliance(const std::string& name, double power, const std::string& brand)
-        : AbstractElectricDevice(name, power), _brand(brand) {} // Конструктор с инициализацией
+    HomeAppliance(const std::string& name, int power, const std::string& brand)
+        : AbstractElectricDevice(name, power), _brand(brand) {}
 };
 
 // --- Электроинструмент ---
 class PowerTool : public AbstractElectricDevice {
 protected:
-    double _voltage; // Напряжение питания
+    int _voltage;
 
 public:
-    PowerTool(const std::string& name, double power, double voltage)
-        : AbstractElectricDevice(name, power), _voltage(voltage) {} // Конструктор
+    PowerTool(const std::string& name, int power, int voltage)
+        : AbstractElectricDevice(name, power), _voltage(voltage) {}
 };
 
 // --- Холодильник ---
 class Refrigerator : public HomeAppliance {
 private:
-    double _capacity; // Объем в литрах
+    int _capacity;
 
 public:
-    Refrigerator(const std::string& name, double power, const std::string& brand, double capacity)
-        : HomeAppliance(name, power, brand), _capacity(capacity) {} // Конструктор
+    Refrigerator(const std::string& name, int power, const std::string& brand, int capacity)
+        : HomeAppliance(name, power, brand), _capacity(capacity) {}
 
     std::string GetInfo() const override {
         return "Refrigerator: " + _name + ", Brand: " + _brand +
-               ", Capacity: " + std::to_string(_capacity) + "L, Power: " + std::to_string(_power);
+               ", Capacity: " + std::to_string(_capacity) + "L, Power: " + std::to_string(_power) + "W";
     }
 };
 
 // --- Дрель ---
 class Drill : public PowerTool {
 private:
-    int _rpm; // Обороты в минуту
+    int _rpm;
 
 public:
-    Drill(const std::string& name, double power, double voltage, int rpm)
-        : PowerTool(name, power, voltage), _rpm(rpm) {} // Конструктор
+    Drill(const std::string& name, int power, int voltage, int rpm)
+        : PowerTool(name, power, voltage), _rpm(rpm) {}
 
     std::string GetInfo() const override {
         return "Drill: " + _name + ", Voltage: " + std::to_string(_voltage) +
-               "V, RPM: " + std::to_string(_rpm) + ", Power: " + std::to_string(_power);
+               "V, RPM: " + std::to_string(_rpm) + ", Power: " + std::to_string(_power) + "W";
     }
 };
 
-// === Интерфейс  устройств ===
+// === Интерфейс фабрики устройств ===
 class DeviceFactory {
 public:
-    virtual std::unique_ptr<AbstractElectricDevice> Create() const = 0; // Метод создания устройства
+    virtual std::unique_ptr<AbstractElectricDevice> Create() const = 0;
     virtual ~DeviceFactory() = default;
 };
 
-// ---  холодильников ---
+// --- Фабрика холодильников ---
 class RefrigeratorFactory : public DeviceFactory {
 public:
     std::unique_ptr<AbstractElectricDevice> Create() const override {
-        return std::make_unique<Refrigerator>("Samsung Fridge", 150, "Samsung", 300); // Создание конкретного холодильника
+        return std::make_unique<Refrigerator>("Samsung Fridge", 150, "Samsung", 300);
     }
 };
 
-// ---  дрелей ---
+// --- Фабрика дрелей ---
 class DrillFactory : public DeviceFactory {
 public:
     std::unique_ptr<AbstractElectricDevice> Create() const override {
-        return std::make_unique<Drill>("Bosch Drill", 800, 220, 3000); // Создание конкретной дрели
+        return std::make_unique<Drill>("Bosch Drill", 800, 220, 3000);
     }
 };
 
 // === Класс логики приложения ===
 class DeviceManager {
 private:
-    std::vector<std::unique_ptr<AbstractElectricDevice>> _devices; // Список всех устройств
-    std::shared_ptr<ILogger> _logger; // Логгер
+    std::vector<std::unique_ptr<AbstractElectricDevice>> _devices;
+    std::shared_ptr<ILogger> _logger;
 
 public:
-    DeviceManager(std::shared_ptr<ILogger> logger) : _logger(logger) {} // Конструктор
+    DeviceManager(std::shared_ptr<ILogger> logger) : _logger(logger) {}
 
     void AddDevice(std::unique_ptr<AbstractElectricDevice> device) {
-        _logger->Log("Добавлено устройство: " + device->GetInfo()); // Логируем добавление
-        _devices.push_back(std::move(device)); // Добавляем в список
+        _logger->Log("Добавлено устройство: " + device->GetInfo());
+        _devices.push_back(std::move(device));
     }
 
     void TurnOnAll() {
         for (auto& device : _devices) {
             device->TurnOn();
-            _logger->Log("Включено: " + device->GetInfo()); // Логируем включение
+            _logger->Log("Включено: " + device->GetInfo());
         }
     }
 
-    double GetTotalPower() const {
-        double total = 0;
+    int GetTotalPower() const {
+        int total = 0;
         for (const auto& device : _devices) {
-            total += device->GetPower(); // Суммируем мощность включённых устройств
+            total += device->GetPower();
         }
         return total;
     }
 
     const std::vector<std::unique_ptr<AbstractElectricDevice>>& GetDevices() const {
-        return _devices; // Возвращаем список устройств (только для чтения)
+        return _devices;
     }
 };
 
 // === Интерфейс пользователя ===
 class ConsoleUI {
 private:
-    DeviceManager& _manager;          // Ссылка на менеджер устройств
-    std::shared_ptr<ILogger> _logger; // Логгер
+    DeviceManager& _manager;
+    std::shared_ptr<ILogger> _logger;
 
 public:
     ConsoleUI(DeviceManager& manager, std::shared_ptr<ILogger> logger)
-        : _manager(manager), _logger(logger) {} // Конструктор
+        : _manager(manager), _logger(logger) {}
 
     void ShowDevices() const {
         const auto& devices = _manager.GetDevices();
         std::cout << "\nСписок устройств:\n";
         for (const auto& device : devices) {
-            std::cout << device->GetInfo() << "\n"; // Вывод информации о каждом устройстве
+            std::cout << device->GetInfo() << "\n";
         }
     }
 
     void ShowTotalPower() const {
-        double total = _manager.GetTotalPower(); // Получаем общую мощность
+        int total = _manager.GetTotalPower();
         std::cout << "Общая мощность: " << total << " W\n";
-        _logger->Log("Общая мощность потребления: " + std::to_string(total) + " W"); // Лог
+        _logger->Log("Общая мощность потребления: " + std::to_string(total) + " W");
     }
 };
 
 // === Точка входа (main) ===
 int main() {
-    auto logger = LoggerFactory::CreateLogger(LoggerFactory::Console); // Создаем логгер (можно File)
+    auto logger = LoggerFactory::CreateLogger(LoggerFactory::Console);
 
-    DeviceManager manager(logger); // Менеджер логики с логгером
+    DeviceManager manager(logger);
 
-    RefrigeratorFactory fridgeFactory; // Фабрика холодильников
-    DrillFactory drillFactory;         // Фабрика дрелей
+    RefrigeratorFactory fridgeFactory;
+    DrillFactory drillFactory;
 
-    manager.AddDevice(fridgeFactory.Create()); // Добавляем холодильник
-    manager.AddDevice(drillFactory.Create());  // Добавляем дрель
+    manager.AddDevice(fridgeFactory.Create());
+    manager.AddDevice(drillFactory.Create());
 
-    manager.TurnOnAll(); // Включаем все устройства
+    manager.TurnOnAll();
 
-    ConsoleUI ui(manager, logger); // UI
-
-    ui.ShowDevices();    // Показываем устройства
-    ui.ShowTotalPower(); // Показываем мощность
+    ConsoleUI ui(manager, logger);
+    ui.ShowDevices();
+    ui.ShowTotalPower();
 
     return 0;
 }

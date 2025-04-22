@@ -1,7 +1,5 @@
 # ninja log v6
-3	703	7666184233530900	CMakeFiles/ElectricDevices.dir/main.cpp.obj	9bb05c79d6d1372d
-707	823	7666184240576696	ElectricDevices.exe	446860d3f7f21f8f
-5	695	7666186688976035	CMakeFiles/ElectricDevices.dir/main.cpp.obj	9bb05c79d6d1372d
-695	862	7666186695870593	ElectricDevices.exe	446860d3f7f21f8f
-7	733	7666200141163545	CMakeFiles/ElectricDevices.dir/main.cpp.obj	9bb05c79d6d1372d
-734	893	7666200148428469	ElectricDevices.exe	446860d3f7f21f8f
+22	982	7670020600895968	CMakeFiles/ElectricDevices.dir/main.cpp.obj	9bb05c79d6d1372d
+982	1144	7670020610492171	ElectricDevices.exe	446860d3f7f21f8f
+18	766	7670024079933129	CMakeFiles/ElectricDevices.dir/main.cpp.obj	9bb05c79d6d1372d
+766	884	7670024087410210	ElectricDevices.exe	446860d3f7f21f8f
